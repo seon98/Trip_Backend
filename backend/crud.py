@@ -27,3 +27,37 @@ def create_accommodation(db: Session, accommodation: schemas.AccommodationCreate
     db.commit()  # DB에 변경사항 저장
     db.refresh(db_accommodation)  # 저장된 객체로 세션 새로고침 (ID 등)
     return db_accommodation
+
+
+# 숙소 정보 수정 (Update)
+def update_accommodation(
+    db: Session,
+    accommodation_id: int,
+    accommodation_update: schemas.AccommodationCreate,
+):
+    # 1. ID를 기준으로 DB에서 수정할 데이터를 찾습니다.
+    db_accommodation = get_accommodation(db, accommodation_id=accommodation_id)
+
+    if db_accommodation:
+        # 2. Pydantic 모델에서 받은 데이터(accommodation_update)를 딕셔너리로 변환합니다.
+        update_data = accommodation_update.dict(exclude_unset=True)
+
+        # 3. 딕셔너리의 각 키와 값을 기준으로 DB 모델 객체의 속성을 업데이트합니다.
+        for key, value in update_data.items():
+            setattr(db_accommodation, key, value)
+
+        db.commit()  # 변경사항을 DB에 커밋(저장)합니다.
+        db.refresh(db_accommodation)  # DB로부터 업데이트된 객체 정보를 새로고침합니다.
+
+    return db_accommodation
+
+
+# 숙소 정보 삭제 (Delete)
+def delete_accommodation(db: Session, accommodation_id: int):
+    db_accommodation = get_accommodation(db, accommodation_id=accommodation_id)
+
+    if db_accommodation:
+        db.delete(db_accommodation)  # 해당 객체를 DB 세션에서 삭제하도록 표시합니다.
+        db.commit()  # 변경사항을 DB에 커밋합니다.
+
+    return db_accommodation
