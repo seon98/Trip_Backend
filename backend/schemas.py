@@ -1,9 +1,12 @@
-# schemas.py
+# backend/schemas.py
+
+from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
+# --- Accommodation Schemas ---
 
-# 기본 숙소 정보 스키마
+
 class AccommodationBase(BaseModel):
     name: str
     location: str
@@ -11,19 +14,28 @@ class AccommodationBase(BaseModel):
     description: str | None = None
 
 
-# 숙소 생성 시 사용할 스키마
 class AccommodationCreate(AccommodationBase):
     pass
 
 
-# DB에서 읽어올 때 사용할 숙소 스키마 (id 포함)
-class Accommodation(AccommodationBase):
+# User 정보를 표현하기 위한 스키마 (Accommodation 응답에 포함될 부분)
+class UserInAccommodation(BaseModel):
     id: int
+    email: str
     model_config = ConfigDict(from_attributes=True)
 
 
-# 항공권 스키마 추가
-# 기본 항공권 정보
+class Accommodation(AccommodationBase):
+    id: int
+    owner_id: int
+    # owner 필드를 추가하여 소유자 정보를 포함시킵니다.
+    owner: UserInAccommodation
+    model_config = ConfigDict(from_attributes=True)
+
+
+# --- Flight Schemas ---
+
+
 class FlightBase(BaseModel):
     departure_airport: str
     arrival_airport: str
@@ -32,26 +44,37 @@ class FlightBase(BaseModel):
     price: int
 
 
-# 항공권 생성 시 사용할 스키마
 class FlightCreate(FlightBase):
     pass
 
 
-# DB에서 읽어올 때 사용할 스키마 (id 포함)
 class Flight(FlightBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
 
 
-# ✨ --- User 스키마 추가 --- ✨
+# --- User Schemas ---
+
+
 class UserBase(BaseModel):
     email: str
 
 
 class UserCreate(UserBase):
-    password: str  # 생성 시에는 평문 비밀번호를 받음
+    password: str
+
+
+# Accommodation 정보를 표현하기 위한 스키마 (User 응답에 포함될 부분)
+class AccommodationInUser(BaseModel):
+    id: int
+    name: str
+    location: str
+    price: int
+    model_config = ConfigDict(from_attributes=True)
 
 
 class User(UserBase):
     id: int
+    # accommodations 필드를 추가하여 소유한 숙소 목록을 포함시킵니다.
+    accommodations: List[AccommodationInUser] = []
     model_config = ConfigDict(from_attributes=True)
