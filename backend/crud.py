@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from . import models, schemas
+from . import models, schemas, security
 
 
 # 특정 숙소 조회 (ID 기준)
@@ -61,3 +61,35 @@ def delete_accommodation(db: Session, accommodation_id: int):
         db.commit()  # 변경사항을 DB에 커밋합니다.
 
     return db_accommodation
+
+
+# 항공권 CRUD 추가
+def get_flight(db: Session, flight_id: int):
+    return db.query(models.Flight).filter(models.Flight.id == flight_id).first()
+
+
+def get_flights(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Flight).offset(skip).limit(limit).all()
+
+
+def create_flight(db: Session, flight: schemas.FlightCreate):
+    db_flight = models.Flight(**flight.dict())
+    db.add(db_flight)
+    db.commit()
+    db.refresh(db_flight)
+    return db_flight
+
+
+# ✨ --- User CRUD 함수 추가 --- ✨
+def get_user_by_email(db: Session, email: str):
+    return db.query(models.User).filter(models.User.email == email).first()
+
+
+def create_user(db: Session, user: schemas.UserCreate):
+    # 비밀번호를 해싱하여 저장
+    hashed_password = security.get_password_hash(user.password)
+    db_user = models.User(email=user.email, hashed_password=hashed_password)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
