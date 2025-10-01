@@ -1,15 +1,15 @@
 # backend/crud.py
 
-from sqlalchemy.orm import Session, joinedload  # 👈 joinedload를 새로 가져옵니다.
+from typing import Optional  # 👈 Optional 타입을 가져옵니다.
+
+from sqlalchemy.orm import Session, joinedload
 
 from . import models, schemas, security
 
 # --- Accommodation CRUD ---
 
 
-# ✨ get_accommodation 함수를 수정합니다.
 def get_accommodation(db: Session, accommodation_id: int):
-    # .options(joinedload(...))를 추가하여 owner 정보를 함께 로딩하도록 합니다.
     return (
         db.query(models.Accommodation)
         .options(joinedload(models.Accommodation.owner))
@@ -18,15 +18,22 @@ def get_accommodation(db: Session, accommodation_id: int):
     )
 
 
-def get_accommodations(db: Session, skip: int = 0, limit: int = 100):
-    # 전체 목록을 가져올 때도 owner 정보를 함께 로딩하면 성능에 좋습니다.
-    return (
-        db.query(models.Accommodation)
-        .options(joinedload(models.Accommodation.owner))
-        .offset(skip)
-        .limit(limit)
-        .all()
+# ✨ get_accommodations 함수를 수정합니다.
+def get_accommodations(
+    db: Session, location: Optional[str] = None, skip: int = 0, limit: int = 100
+):
+    # 기본 쿼리를 먼저 만듭니다.
+    query = db.query(models.Accommodation).options(
+        joinedload(models.Accommodation.owner)
     )
+
+    # 만약 location 파라미터가 주어졌다면, 필터 조건을 추가합니다.
+    if location:
+        # location 컬럼에 파라미터 값이 포함된(contains) 모든 숙소를 찾습니다.
+        query = query.filter(models.Accommodation.location.contains(location))
+
+    # 최종적으로 skip과 limit을 적용하여 결과를 반환합니다.
+    return query.offset(skip).limit(limit).all()
 
 
 def create_accommodation(
