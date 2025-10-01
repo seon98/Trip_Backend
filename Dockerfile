@@ -6,15 +6,13 @@ FROM python:3.11-slim
 # 2. 컨테이너 안의 작업 디렉토리 설정
 WORKDIR /app
 
-# 3. .env 파일과 backend 폴더를 컨테이너 안으로 복사
-COPY ./.env /app/.env
+# 3. .env 파일 복사 라인을 삭제하거나 주석 처리합니다.
+# COPY ./.env /app/.env  <-- ✨ 이 줄을 삭제 또는 주석 처리!
 COPY ./backend /app/backend
 
 # 4. requirements.txt 파일을 복사하고 uv를 이용해 라이브러리 설치
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install uv
-
-# 👇 이 명령어에 --system 옵션을 추가합니다.
 RUN uv pip install --system --no-cache-dir -r requirements.txt
 
 # 5. 컨테이너가 시작될 때 실행할 명령어
