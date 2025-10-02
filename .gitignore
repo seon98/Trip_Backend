@@ -1,9 +1,25 @@
-# Trip_Backend/.gitignore (없으면 새로 만들기)
+# .gitignore (전체 수정 코드)
 
-# ... 다른 내용들 ...
-
-# 환경 변수 파일
+# Environments
 .env
-
-# 파이썬 가상환경
 .venv/
+env/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# SQLite
+*.db
+*.db-journal
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
