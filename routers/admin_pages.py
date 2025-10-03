@@ -5,8 +5,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from .. import crud, models, security
-from ..database import get_db
+import crud
+import security
+from database import get_db
 
 router = APIRouter(
     prefix="/admin",
@@ -17,7 +18,7 @@ router = APIRouter(
     ],  # 👈 쿠키용 인증 함수 사용
 )
 
-templates = Jinja2Templates(directory="backend/templates")
+templates = Jinja2Templates(directory="templates")
 
 
 # --- 관리자 대시보드 메인 ---

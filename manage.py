@@ -1,11 +1,15 @@
 # manage.py (전체 수정 코드)
 
-import typer
-from sqlalchemy.orm import Session
 from typing_extensions import Annotated
 
-from backend import crud, models, schemas, security
-from backend.database import SessionLocal, engine
+import typer
+from sqlalchemy.orm import Session
+
+import crud
+import models
+import schemas
+import security
+from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 

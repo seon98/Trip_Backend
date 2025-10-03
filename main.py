@@ -4,23 +4,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from .database import Base, engine
+# 👇 Base와 engine을 임포트합니다
+from database import Base, engine
 
 # 👇 admin_pages 라우터를 새로 가져옵니다.
-from .routers import (
-    accommodations,
-    admin,
-    admin_pages,
-    auth,
-    bookings,
-    flights,
-    pages,
-    users,
-)
+from routers import accommodations, admin, admin_pages, auth, bookings, flights, pages, users
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="backend/static"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 origins = ["*"]
 app.add_middleware(

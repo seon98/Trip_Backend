@@ -2,7 +2,9 @@ from typing import Optional
 
 from sqlalchemy.orm import Session, joinedload
 
-from . import models, schemas, security
+import models
+import schemas
+import security
 
 
 # --- Accommodation CRUD ---

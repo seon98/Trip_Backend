@@ -6,8 +6,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel  # 👈 여기에 누락되었던 import를 추가했습니다!
 from sqlalchemy.orm import Session
 
-from .. import crud, models, schemas, security
-from ..database import get_db
+import crud
+import models
+import schemas
+import security
+from database import get_db
 
 router = APIRouter(
     prefix="/api/bookings",

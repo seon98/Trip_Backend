@@ -3,8 +3,9 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from .. import crud, schemas
-from ..database import get_db  # 👈 중앙화된 get_db를 가져옵니다.
+import crud
+import schemas
+from database import get_db  # 👈 중앙화된 get_db를 가져옵니다.
 
 router = APIRouter(
     prefix="/api/flights",

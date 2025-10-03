@@ -9,9 +9,10 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from . import crud, models
-from .config import settings
-from .database import get_db
+import crud
+import models
+from config import settings
+from database import get_db
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
@@ -54,7 +55,7 @@ def verify_token(token: str, credentials_exception):
 
 # --- 웹 페이지(쿠키 기반)용 인증 함수 ---
 def get_current_user_from_cookie(
-    request: Request, db: Session = Depends(get_db)
+        request: Request, db: Session = Depends(get_db)
 ) -> Optional[models.User]:
     token = request.cookies.get("access_token")
     if not token:
@@ -75,7 +76,7 @@ def get_current_user_from_cookie(
 
 # --- API(헤더 기반)용 인증 함수 ---
 def get_current_active_user(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+        token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ) -> models.User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -91,7 +92,7 @@ def get_current_active_user(
 
 # --- 쿠키 기반 관리자 확인 함수 ---
 def get_current_admin_user_from_cookie(
-    current_user: models.User = Depends(get_current_user_from_cookie),
+        current_user: models.User = Depends(get_current_user_from_cookie),
 ) -> models.User:
     if not current_user or current_user.role != "admin":
         raise HTTPException(
@@ -102,7 +103,7 @@ def get_current_admin_user_from_cookie(
 
 # --- API 기반 관리자 확인 함수 ---
 def get_current_admin_user(
-    current_user: models.User = Depends(get_current_active_user),
+        current_user: models.User = Depends(get_current_active_user),
 ) -> models.User:
     if current_user.role != "admin":
         raise HTTPException(

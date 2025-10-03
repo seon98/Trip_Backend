@@ -4,8 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from .. import crud, security
-from ..database import get_db
+from database import get_db
 
 router = APIRouter(
     prefix="/api",  # 👈 /token 앞에 /api를 붙이기 위해 prefix를 /api로 설정

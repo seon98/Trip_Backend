@@ -5,8 +5,10 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from .. import crud, models, schemas, security
-from ..database import get_db
+import crud
+import schemas
+import security
+from database import get_db
 
 router = APIRouter(
     prefix="/api/admin",  # 👈 /admin -> /api/admin 으로 변경

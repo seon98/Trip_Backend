@@ -3,11 +3,14 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from .. import crud, models, schemas, security
-from ..database import get_db
+import crud
+import models
+import schemas
+import security
+from database import get_db
 
 router = APIRouter(tags=["pages"])
-templates = Jinja2Templates(directory="backend/templates")
+templates = Jinja2Templates(directory="templates")
 
 # --- 페이지 렌더링 엔드포인트 ---
 
