@@ -1,14 +1,11 @@
-# backend/crud.py
-
-from typing import Optional  # 👈 Optional 타입을 가져옵니다.
+from typing import Optional
 
 from sqlalchemy.orm import Session, joinedload
 
 from . import models, schemas, security
 
+
 # --- Accommodation CRUD ---
-
-
 def get_accommodation(db: Session, accommodation_id: int):
     return (
         db.query(models.Accommodation)
@@ -18,21 +15,14 @@ def get_accommodation(db: Session, accommodation_id: int):
     )
 
 
-# ✨ get_accommodations 함수를 수정합니다.
 def get_accommodations(
     db: Session, location: Optional[str] = None, skip: int = 0, limit: int = 100
 ):
-    # 기본 쿼리를 먼저 만듭니다.
     query = db.query(models.Accommodation).options(
         joinedload(models.Accommodation.owner)
     )
-
-    # 만약 location 파라미터가 주어졌다면, 필터 조건을 추가합니다.
     if location:
-        # location 컬럼에 파라미터 값이 포함된(contains) 모든 숙소를 찾습니다.
         query = query.filter(models.Accommodation.location.contains(location))
-
-    # 최종적으로 skip과 limit을 적용하여 결과를 반환합니다.
     return query.offset(skip).limit(limit).all()
 
 
@@ -69,7 +59,7 @@ def delete_accommodation(db: Session, accommodation_id: int):
     return db_accommodation
 
 
-# --- Flight CRUD --- (변경 없음)
+# --- Flight CRUD ---
 def get_flight(db: Session, flight_id: int):
     return db.query(models.Flight).filter(models.Flight.id == flight_id).first()
 
@@ -86,9 +76,14 @@ def create_flight(db: Session, flight: schemas.FlightCreate):
     return db_flight
 
 
-# --- User CRUD --- (변경 없음)
+# --- User CRUD ---
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
+
+
+# ✨ 관리자 기능을 위해 모든 사용자를 조회하는 함수 추가
+def get_users(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.User).offset(skip).limit(limit).all()
 
 
 def create_user(db: Session, user: schemas.UserCreate):
@@ -98,3 +93,53 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+# --- Accommodation Booking CRUD ---
+def create_accommodation_booking(
+    db: Session,
+    booking: schemas.AccommodationBookingCreate,
+    accommodation_id: int,
+    user_id: int,
+):
+    db_booking = models.AccommodationBooking(
+        **booking.dict(), accommodation_id=accommodation_id, user_id=user_id
+    )
+    db.add(db_booking)
+    db.commit()
+    db.refresh(db_booking)
+    return db_booking
+
+
+def get_user_accommodation_bookings(db: Session, user_id: int):
+    return (
+        db.query(models.AccommodationBooking)
+        .filter(models.AccommodationBooking.user_id == user_id)
+        .all()
+    )
+
+
+# ✨ 관리자 기능을 위해 모든 숙소 예약을 조회하는 함수 추가
+def get_all_accommodation_bookings(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.AccommodationBooking).offset(skip).limit(limit).all()
+
+
+# --- Flight Booking CRUD ---
+def create_flight_booking(
+    db: Session, booking: schemas.FlightBookingCreate, flight_id: int, user_id: int
+):
+    db_booking = models.FlightBooking(
+        **booking.dict(), flight_id=flight_id, user_id=user_id
+    )
+    db.add(db_booking)
+    db.commit()
+    db.refresh(db_booking)
+    return db_booking
+
+
+def get_user_flight_bookings(db: Session, user_id: int):
+    return (
+        db.query(models.FlightBooking)
+        .filter(models.FlightBooking.user_id == user_id)
+        .all()
+    )

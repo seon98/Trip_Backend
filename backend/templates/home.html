@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% block title %}홈페이지 - 떠나봄{% endblock %} {%
+block content %}
+<h2 class="my-4">추천 숙소</h2>
+<div class="row">
+  {% if accommodations %} {% for acc in accommodations %}
+  <div class="col-md-4 mb-4">
+    <div class="card">
+      <img
+        src="https://picsum.photos/seed/{{ acc.id }}/400/250"
+        class="card-img-top"
+        alt="{{ acc.name }}"
+      />
+      <div class="card-body">
+        <h5 class="card-title">{{ acc.name }}</h5>
+        <p class="card-text">
+          <strong>위치:</strong> {{ acc.location }}<br />
+          <strong>가격:</strong> {{ acc.price|round|int }}원 / 박
+        </p>
+        <div class="card-footer text-muted">등록자: {{ acc.owner.email }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %} {% else %}
+  <p>등록된 숙소가 없습니다.</p>
+  {% endif %}
+</div>
+{% endblock %}

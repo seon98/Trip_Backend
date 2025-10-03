@@ -1,29 +1,19 @@
-# routers/users.py (새 파일)
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from .. import crud, schemas
-from ..database import SessionLocal
+from ..database import get_db  # 👈 중앙화된 get_db를 가져옵니다.
 
 router = APIRouter(
-    prefix="/users",
+    prefix="/api/users",
     tags=["users"],
 )
 
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# ❌ 여기에 있던 def get_db(): ... 함수를 삭제합니다.
 
 
 @router.post("/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    # 이메일 중복 확인
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="이미 등록된 이메일입니다.")

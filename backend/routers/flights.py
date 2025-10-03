@@ -1,26 +1,17 @@
-# routers/flights.py (새 파일)
-
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from .. import crud, schemas
-from ..database import SessionLocal
+from ..database import get_db  # 👈 중앙화된 get_db를 가져옵니다.
 
 router = APIRouter(
-    prefix="/flights",
-    tags=["flights"],  # API 문서를 위해 "flights" 태그를 사용
+    prefix="/api/flights",
+    tags=["flights"],
 )
 
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# ❌ 여기에 있던 def get_db(): ... 함수를 삭제합니다.
 
 
 @router.post("/", response_model=schemas.Flight)

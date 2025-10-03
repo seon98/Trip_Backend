@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block title %}새 숙소 등록 - 떠나봄{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card mx-auto" style="max-width: 600px">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4">새 숙소 등록</h2>
+      <form method="post">
+        <div class="mb-3">
+          <label for="name" class="form-label">숙소 이름</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="location" class="form-label">위치</label>
+          <input
+            type="text"
+            class="form-control"
+            id="location"
+            name="location"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="price" class="form-label">가격 (1박)</label>
+          <input
+            type="number"
+            class="form-control"
+            id="price"
+            name="price"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">설명 (선택)</label>
+          <textarea
+            class="form-control"
+            id="description"
+            name="description"
+            rows="3"
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">등록하기</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
