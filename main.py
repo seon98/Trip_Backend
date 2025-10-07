@@ -1,14 +1,8 @@
-# backend/main.py (전체 수정 코드)
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-
-# 👇 Base와 engine을 임포트합니다
-from database import Base, engine
-
-# 👇 admin_pages 라우터를 새로 가져옵니다.
-from routers import accommodations, admin, admin_pages, auth, bookings, flights, pages, users
+from database import engine, Base
+from routers import accommodations, flights, users, auth, pages, bookings, admin, admin_pages
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -30,8 +24,7 @@ app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(bookings.router)
 app.include_router(admin.router)
-app.include_router(admin_pages.router)  # 👈 새로운 admin_pages 라우터를 등록합니다.
-
+app.include_router(admin_pages.router)
 
 @app.get("/api-root")
 def read_api_root():

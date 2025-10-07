@@ -1,9 +1,10 @@
-# backend/models.py (전체 수정 코드)
+# models.py (전체 수정 코드)
 
-from sqlalchemy import Column, Date, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, ForeignKey, Date
+# 👇 sqlalchemy.orm에서 필요한 것들을 명확히 지정해줍니다.
+from sqlalchemy.orm import relationship, declarative_base
 
-from database import Base
+Base = declarative_base()
 
 
 class User(Base):
@@ -14,7 +15,6 @@ class User(Base):
     role = Column(String, default="user")
 
     accommodations = relationship("Accommodation", back_populates="owner")
-    # ✨ User와 Booking 모델 간의 관계를 추가합니다.
     accommodation_bookings = relationship("AccommodationBooking", back_populates="user")
     flight_bookings = relationship("FlightBooking", back_populates="user")
 
@@ -29,7 +29,6 @@ class Accommodation(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="accommodations")
-    # ✨ Accommodation과 Booking 모델 간의 관계를 추가합니다.
     bookings = relationship("AccommodationBooking", back_populates="accommodation")
 
 
@@ -42,11 +41,7 @@ class Flight(Base):
     arrival_time = Column(String)
     price = Column(Integer)
 
-    # ✨ Flight와 Booking 모델 간의 관계를 추가합니다.
     bookings = relationship("FlightBooking", back_populates="flight")
-
-
-# --- ✨ 여기에 새로운 예약 모델들을 추가합니다 ✨ ---
 
 
 class AccommodationBooking(Base):
@@ -54,7 +49,7 @@ class AccommodationBooking(Base):
     id = Column(Integer, primary_key=True, index=True)
     start_date = Column(Date, nullable=False)
     end_date = Column(Date, nullable=False)
-    status = Column(String, default="pending")  # 예: pending, confirmed, cancelled
+    status = Column(String, default="pending")
 
     user_id = Column(Integer, ForeignKey("users.id"))
     accommodation_id = Column(Integer, ForeignKey("accommodations.id"))

@@ -11,7 +11,6 @@ from sqlalchemy.orm import Session
 
 import crud
 import models
-from config import settings
 from database import get_db
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")

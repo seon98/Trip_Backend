@@ -1,10 +1,6 @@
-from typing import Optional
-
 from sqlalchemy.orm import Session, joinedload
-
-import models
-import schemas
-import security
+from typing import Optional
+import models, schemas, security
 
 
 # --- Accommodation CRUD ---

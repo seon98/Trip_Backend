@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}내 예약 목록 - 떠나봄{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">내 예약 목록</h2>
+
+    <h4>숙소 예약</h4>
+    {% if accommodation_bookings %}
+        <div class="list-group">
+            {% for booking in accommodation_bookings %}
+            <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ booking.accommodation.name }}</h5>
+                    <small>상태: {{ booking.status }}</small>
+                </div>
+                <p class="mb-1">
+                    <strong>위치:</strong> {{ booking.accommodation.location }} <br>
+                    <strong>예약 기간:</strong> {{ booking.start_date }} ~ {{ booking.end_date }}
+                </p>
+                <small>예약 ID: {{ booking.id }}</small>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>숙소 예약 내역이 없습니다.</p>
+    {% endif %}
+
+    <h4 class="mt-5">항공권 예약</h4>
+    {% if flight_bookings %}
+        <div class="list-group">
+            {% for booking in flight_bookings %}
+            <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ booking.flight.departure_airport }} → {{ booking.flight.arrival_airport }}</h5>
+                    <small>상태: {{ booking.status }}</small>
+                </div>
+                <p class="mb-1">
+                    <strong>예약일:</strong> {{ booking.booking_date }}
+                </p>
+                <small>예약 ID: {{ booking.id }}</small>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>항공권 예약 내역이 없습니다.</p>
+    {% endif %}
+</div>
+{% endblock %}

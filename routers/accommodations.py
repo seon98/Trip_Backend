@@ -5,10 +5,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-import crud
-import models
-import schemas
-import security
+import crud, models, schemas, security
 from database import get_db
 
 # ❌ from ..routers.auth import get_current_user # 👈 이 줄을 삭제합니다.
